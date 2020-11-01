@@ -1,30 +1,38 @@
 import discord
+from discord.ext import commands
 import os
+from dotenv import load_dotenv
 
-client = discord.Client()
+load_dotenv()
 
 
-@client.event
+description = "Basic python bot with limited functionality to archive channels"
+
+intents = discord.Intents.default()
+intents.members = True
+
+bot = commands.Bot(command_prefix="!", description=description, intents=intents)
+
+
+@bot.event
 async def on_ready():
-    print("We have logged in as {0.user}".format(client))
+    print("Logging in as")
+    print(bot.user.name)
+    print(bot.user.id)
+    print("________")
 
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith("!Compile"):
-        for x in client.get_all_channels():
-            if x.name == "general-text":
-                print(x.id)
-                channel = client.get_channel(x.id)
-                messages = await channel.history(limit=200).flatten()
-                messages.reverse()
-                strings = []
-                for message in messages:
-                    strings.append(message.content)
-                print(*strings)
+@bot.command()
+async def compile(ctx, count: int):
+    # print(ctx.message.channel, ctx.message.channel.id)
+    channel = bot.get_channel(ctx.message.channel.id)
+    messages = await channel.history(limit=count).flatten()
+    messages.reverse()
+    strings = []
+    for message in messages:
+        strings.append(message.content)
+    print(*strings)
+    await ctx.send("Combined the previous " + str(count) + " messages")
 
 
-client.run(os.environ.get("DISCORD_KEY"))
+bot.run(os.environ.get("DISCORD_KEY"))
