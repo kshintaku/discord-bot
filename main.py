@@ -24,7 +24,6 @@ async def on_ready():
 
 @bot.command()
 async def compile(ctx, count: int):
-    # print(ctx.message.channel, ctx.message.channel.id)
     channel = bot.get_channel(ctx.message.channel.id)
     messages = await channel.history(limit=count).flatten()
     messages.reverse()
