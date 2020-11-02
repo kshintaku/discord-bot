@@ -13,5 +13,3 @@ def index(request):
         "discord_key": discord_key,
     }
     return HttpResponse(template.render(context, request))
-
-
