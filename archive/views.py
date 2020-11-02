@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 def index(request):
     template = loader.get_template("archive/index.html")
-    discord_key = request.get("code")
+    discord_key = request.GET.get("code")
     context = {
         "discord_key": discord_key,
     }
